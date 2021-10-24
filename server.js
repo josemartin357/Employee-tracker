@@ -1,6 +1,7 @@
 const express = require('express');
 const mysql = require('mysql2');
 const inquirer = require("inquirer");
+const { result } = require('lodash');
 
 const PORT = process.env.PORT || 3001;
 const app = express();
@@ -81,16 +82,71 @@ const startInquirer = () => {
   });
 }
 
+// When choosing to view all departments, table displays showing department names and department ids
+const viewAllDepartments = () =>{
+  db.query(`SELECT * FROM department;`,(err, res) => {
+    if (err) throw err;
+    console.table(res)
+  });
+  startInquirer();
+};
+
+// When choosing to view all roles, table displays with job title, role id, department the role belongs to and salary for that role
+const viewAllRoles = () =>{
+  db.query(`SELECT * FROM role;`,(err, res) => {
+    if (err) throw err;
+    console.table(res)
+  });
+  startInquirer();
+};
+
+// When choosing to view all employees, table displays showing employee ids, first names, last names, job titles, 
+const viewAllEmployees = () => {
+  db.query(`SELECT * FROM employee;`,(err, res) => {
+    if (err) throw err;
+    console.table(res)
+  });
+  startInquirer();
+};
+
+// When choosing to add department, inquirer prompts to enter the name of the department and that department is added to the database
+const addDepartment = () =>{
+  inquirer.prompt({
+    name: 'deptName',
+    type: 'input',
+    message: 'Enter name of the new department: '
+  })
+  .then((response) => {
+    db.query(`INSERT INTO department (name) VALUES ("${response.deptName});`, (err, res) => {
+        if (err) throw err;
+        console.log('Department added')
+        startInquirer();
+      });
+  });
+};
+
+const addRole = () => {
+
+};
+
+const addEmployee = () => {
+
+};
+
+const updateEmployeeRole = () => {
+
+};
+
 
 
 // Default response for any other request (Not Found)
-app.use((req, res) => {
-  res.status(404).end();
-});
+// app.use((req, res) => {
+//   res.status(404).end();
+// });
 
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+// app.listen(PORT, () => {
+//   console.log(`Server running on port ${PORT}`);
+// });
 
 
 
