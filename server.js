@@ -117,7 +117,7 @@ const addDepartment = () =>{
     message: 'Enter name of the new department: '
   })
   .then((response) => {
-    db.query(`INSERT INTO department (name) VALUES ("${response.deptName});`, (err, res) => {
+    db.query(`INSERT INTO department (name) VALUES (${response.deptName});`, (err, res) => {
         if (err) throw err;
         console.log('Department added')
         startInquirer();
@@ -125,12 +125,70 @@ const addDepartment = () =>{
   });
 };
 
+// When choosing to add a role, inquirer prompts to enter the name, salary, and department for the role and that role is added to the database
 const addRole = () => {
+  inquirer.prompt([
+  {
+    name: 'roleTitle',
+    type: 'input',
+    message: 'Enter role title: '
+  },
+  {
+    name: 'roleSalary',
+    type: 'number',
+    message: 'Enter salary for this role: '
+  },
+  // NEED TO FIGURE OUT HOW TO ADD roleDepartmentID to query
+  // {
+  //   name: 'departmentID',
+  //   type: 'list',
+  //   message: 'Enter name of the new role: '
+  // }
 
+])
+// need to add department_id once after figuring out above syntax
+  .then((response) => {
+    db.query(`INSERT INTO role (title, salary) VALUES (${response.roleTitle}), ${response.roleSalary});`, (err, res) => {
+        if (err) throw err;
+        console.log('Role added')
+        startInquirer();
+      });
+  });
 };
 
+// When choosing to add an employee, inquirer prompts to enter the employee’s first name, last name, role, and manager, and that employee is added to the database
 const addEmployee = () => {
+  inquirer.prompt[(
+  {
+    name: 'firstName',
+    type: 'input',
+    message: 'Enter the first name of the new employee: '
+  },
+  {
+    name: 'lastName',
+    type: 'input',
+    message: 'Enter the last name of the new employee: '
+  }
+  // NEED TO FIGURE OUT HOW TO ADD THIS AS A LIST
+  // {
+  //   name: 'roleID',
+  //   type: 'input',
+  //   message: 'Enter the role ID: '
+  // },
+  // {
+  //   name: 'managerID',
+  //   type: 'input',
+  //   message: 'Enter the manager ID: '
+  // }
 
+  )]
+  .then((response) => {
+    db.query(`INSERT INTO employee (first_name, last_name) VALUES (${response.firstName}, ${response.lastName});`, (err, res) => {
+        if (err) throw err;
+        console.log('Employee added')
+        startInquirer();
+      });
+  });
 };
 
 const updateEmployeeRole = () => {
