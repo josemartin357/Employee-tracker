@@ -1,5 +1,6 @@
 const express = require('express');
 const mysql = require('mysql2');
+const inquirer = require("inquirer");
 
 const PORT = process.env.PORT || 3001;
 const app = express();
@@ -13,10 +14,85 @@ const db = mysql.createConnection(
     user: 'root',
     // password: '',
     // add name of db
-    database: ''
+    database: 'employees_db'
   },
   console.log(`Connected to database.`)
 );
+
+const startInquirer = () => {
+  inquirer
+  .prompt({
+    name: 'options',
+    type: 'list',
+    message: 'What would you like to do?',
+    choices: [
+      "View all departments",
+      "View all roles",
+      "View all employees",
+      "Add a department",
+      "Add a role",
+      "Add an employee",
+      "Update employee role",
+      "Quit"
+      // "Update employee manager",
+      // "View employees by manager",
+      // "View employees by department",
+      // "Delete departments",
+      // "Delete roles",
+      // "Delete employees",
+      // "View the total utilized budget"
+    ]
+  })
+
+  .then((response) => {
+    switch (response.options) {
+      case "View all departments":
+        viewAllDepartments();
+        break;
+      
+      case "View all roles":
+        viewAllRoles();
+        break;
+
+      case "View all employees":
+        viewAllEmployees();
+        break;
+
+      case 'Add a department':
+        addDepartment();
+        break;
+
+      case 'Add a role':
+        addRole();
+        break;
+
+      case 'Add an employee':
+        addEmployee();
+        break;
+
+      case 'Update employee Role':
+        updateEmployeeRole();
+        break;
+
+      case 'Quit':
+        db.end();
+        break;
+    }
+  });
+}
+
+
+
+// Default response for any other request (Not Found)
+app.use((req, res) => {
+  res.status(404).end();
+});
+
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
+
+
 
 // ---- ADD INQUIRER QUERIES ----
 // VIEW ALL DEPARTMENT IS A QUERY
