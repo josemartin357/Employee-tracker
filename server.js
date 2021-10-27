@@ -125,7 +125,7 @@ const addDepartment = () =>{
 
 // When choosing to add a role, inquirer prompts to enter the name, salary, and department for the role and that role is added to the database
 const addRole = () => {
-  // TESTING array to pull department ids ... need to tell system to pull id from Department!!!!!!!!!
+  // TODO: TELL THE SYSTEM TO PULL THE ARRAY OF DEPARTMENT IDS
   let departmentIDArray = [];
 
   inquirer.prompt([
@@ -139,7 +139,7 @@ const addRole = () => {
     type: 'number',
     message: 'Enter salary for this role: '
   },
-  // NEED TO FIGURE OUT HOW TO ADD roleDepartmentID to query
+  // TODO: ADD DEPARTMENTIDARRAY AS CHOICES IN LIST
   {
     name: 'departmentID',
     type: 'list',
@@ -149,7 +149,7 @@ const addRole = () => {
 ])
 // need to add department_id once after figuring out above syntax
   .then((response) => {
-    // NEED TO CONNECT 
+    // TODO: NEED TO CONNECT ARRAY... DO I NEED A FOR LOOP?
     db.query(`INSERT INTO role (title, salary) VALUES (${response.roleTitle}), ${response.roleSalary}, ${response.departmentID});`, (err, res) => {
         if (err) throw err;
         console.log('Role added')
@@ -160,6 +160,10 @@ const addRole = () => {
 
 // When choosing to add an employee, inquirer prompts to enter the employee’s first name, last name, role, and manager, and that employee is added to the database
 const addEmployee = () => {
+  // TODO: TELL THE SYSTEM TO PULL THE ARRAY OF MANAGERS AND ROLES
+  let managersArray = [];
+  let rolesArray = [];
+// TODO: WHAT IF EMPLOYEE HAS NO MANAGER?
   inquirer.prompt[(
   {
     name: 'firstName',
@@ -170,31 +174,63 @@ const addEmployee = () => {
     name: 'lastName',
     type: 'input',
     message: 'Enter the last name of the new employee: '
+  },
+  // TODO: CHECK SYNTAX TO ADD ROLESARRAY HERE
+  {
+    name: 'roleID',
+    type: 'list',
+    message: 'What\'s the employee\'s role? ',
+    choices: rolesArray
+  },
+   // TODO: CHECK SYNTAX TO ADD MANAGERS ARRAY HERE
+  {
+    name: 'managerID',
+    type: 'list',
+    message: 'Choose the employee\'s manager: ',
+    choices: managersArray
   }
-  // NEED TO FIGURE OUT HOW TO ADD THIS AS A LIST
-  // {
-  //   name: 'roleID',
-  //   type: 'input',
-  //   message: 'Enter the role ID: '
-  // },
-  // {
-  //   name: 'managerID',
-  //   type: 'input',
-  //   message: 'Enter the manager ID: '
-  // }
 
   )]
   .then((response) => {
-    db.query(`INSERT INTO employee (first_name, last_name) VALUES (${response.firstName}, ${response.lastName});`, (err, res) => {
+    // TODO: NEED TO CONNECT ARRAY... DO I NEED A FOR LOOP?
+    db.query(`INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (${response.firstName}, ${response.lastName}, ${response.roleID}, ${response.managerID});`, (err, res) => {
         if (err) throw err;
-        console.log('Employee added')
+        console.log('Employee has been added')
         startInquirer();
       });
   });
 };
 
+// When updating an employee role, then user is prompted to select an employee to update and their new role and this information is updated in the database 
 const updateEmployeeRole = () => {
+  // TODO: NEED TO WORK ON HOW TO ESTABLISH ARRAYS HERE
+  let employeesArray = [];
+  let rolesArray = [];
 
+  inquirer.prompt[(
+    {
+      name: 'employee',
+      type: 'list',
+      message: 'Who would you like to edit? ',
+      // TODO: NEED TO TELL PROGRAM TO PULL LIST OF EMPLOYEES
+      choices: employeesArray
+    },
+    {
+      name: 'role',
+      type: 'list',
+      message: 'What\'s this employee\'s new role? ',
+      // TODO: NEED TO TELL PROGRAM TO PULL LIST OF ROLES
+      choices: rolesArray
+    }
+    )]
+    .then((response) => {
+      // TODO: NEED TO CONNECT ARRAY... DO I NEED A FOR LOOP?
+      db.query(`UPDATE employee SET role_id = ${response.role} WHERE id = ${response.employee});`, (err, res) => {
+          if (err) throw err;
+          console.log('Employee info updated')
+          startInquirer();
+        });
+    });
 };
 
 
