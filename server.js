@@ -1,7 +1,6 @@
 const express = require('express');
 const mysql = require('mysql2');
 const inquirer = require("inquirer");
-const { result } = require('lodash');
 
 const PORT = process.env.PORT || 3001;
 const app = express();
@@ -13,8 +12,7 @@ const db = mysql.createConnection(
   {
     host: 'localhost',
     user: 'root',
-    // password: '',
-    // add name of db
+    password: 'password',
     database: 'employees_db'
   },
   console.log(`Connected to database.`)
@@ -127,6 +125,9 @@ const addDepartment = () =>{
 
 // When choosing to add a role, inquirer prompts to enter the name, salary, and department for the role and that role is added to the database
 const addRole = () => {
+  // TESTING array to pull department ids ... need to tell system to pull id from Department!!!!!!!!!
+  let departmentIDArray = [];
+
   inquirer.prompt([
   {
     name: 'roleTitle',
@@ -139,16 +140,17 @@ const addRole = () => {
     message: 'Enter salary for this role: '
   },
   // NEED TO FIGURE OUT HOW TO ADD roleDepartmentID to query
-  // {
-  //   name: 'departmentID',
-  //   type: 'list',
-  //   message: 'Enter name of the new role: '
-  // }
-
+  {
+    name: 'departmentID',
+    type: 'list',
+    message: 'Choose department id: ',
+    choices: departmentIDArray
+  }
 ])
 // need to add department_id once after figuring out above syntax
   .then((response) => {
-    db.query(`INSERT INTO role (title, salary) VALUES (${response.roleTitle}), ${response.roleSalary});`, (err, res) => {
+    // NEED TO CONNECT 
+    db.query(`INSERT INTO role (title, salary) VALUES (${response.roleTitle}), ${response.roleSalary}, ${response.departmentID});`, (err, res) => {
         if (err) throw err;
         console.log('Role added')
         startInquirer();
