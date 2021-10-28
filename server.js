@@ -63,7 +63,7 @@ const startInquirer = () => {
         addEmployee();
         break;
 
-      case 'Update employee Role':
+      case 'Update employee role':
         updateEmployeeRole();
         break;
 
@@ -217,35 +217,44 @@ db.query(`SELECT id, title FROM role`,(err, data)=>{
 
 // When updating an employee role, then user is prompted to select an employee to update and their new role and this information is updated in the database 
 const updateEmployeeRole = () => {
-  // TODO: NEED TO WORK ON HOW TO ESTABLISH ARRAYS HERE
-  let employeesArray = [];
-  let rolesArray = [];
+  db.query(`SELECT id, title FROM role`,(err, data)=>{
+    // console.log(data);
+    let rolesArray = data.map(role =>({
+      value: role.id,
+      name: role.title,
+    }));
+    db.query(`SELECT id, first_name, last_name FROM employee`,(err,data)=>{
+      // console.log(data);
+      let employeesArray = data.map(employee =>({
+        value: employee.id,
+        name: employee.first_name + " " + employee.last_name,
+      }))
 
-  inquirer.prompt[(
+      
+  inquirer.prompt([
     {
       name: 'employee',
       type: 'list',
       message: 'Who would you like to edit? ',
-      // TODO: NEED TO TELL PROGRAM TO PULL LIST OF EMPLOYEES
       choices: employeesArray
     },
     {
-      name: 'role',
+      name: 'roleID',
       type: 'list',
       message: 'What\'s this employee\'s new role? ',
-      // TODO: NEED TO TELL PROGRAM TO PULL LIST OF ROLES
       choices: rolesArray
     }
-    )]
+  ])
     .then((response) => {
-      // TODO: NEED TO CONNECT ARRAY... DO I NEED A FOR LOOP?
-      db.query(`UPDATE employee SET role_id = ${response.role} WHERE id = ${response.employee});`, (err, res) => {
+      db.query(`UPDATE employee SET role_id = ${response.roleID} WHERE id = ${response.employee};`, (err, res) => {
           if (err) throw err;
           console.log('Employee info updated')
           startInquirer();
         });
-    });
-};
+      });
+    })
+    })
+    };
 
 db.connect((err) => {
   if (err) throw err;
