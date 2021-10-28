@@ -22,10 +22,8 @@ CREATE TABLE employee (
   first_name VARCHAR(30) NOT NULL,
   last_name VARCHAR(30) NOT NULL,
   role_id INT NOT NULL, 
-  manager_id INT
---   FOREIGN KEY (manager_id)
---   REFERENCES (id)
+  FOREIGN KEY (role_id) REFERENCES role(id),
+  manager_id INT,
+  FOREIGN KEY (manager_id) REFERENCES employee(id)
 );
 
--- NEED TO CHECK THIS
--- manager_id: INT to hold reference to another employee that is the manager of the current employee (null if the employee has no manager)
